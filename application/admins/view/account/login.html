@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css">
+    <script src="__STATIC__/plugins/layui/layui.js"></script>
+</head>
+
+<body style="background: #1E9FFF">
+
+    <div style="position:absolute; left: 50%; top: 50%; width: 500px; transform: translate(-50%,-50%)">
+        <div style="background: #fff; padding: 20px; border-radius: 4px;box-shadow: 5px 5px 20px #444;">
+            <div class="layui-form">
+                <div class="layui-form-item">
+                    <h2 style="color: gray;">后台管理</h2>
+                </div>
+                <hr />
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="">用户名</label>
+                    <div class="layui-input-block">
+                        <input class="layui-input" type="text" name="" id="username">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="">密&nbsp;&nbsp;&nbsp;码</label>
+                    <div class="layui-input-block">
+                        <input class="layui-input" type="password" name="" id="password">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="">验证码</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" type="tel" name="" id="verify">
+                    </div>
+                    <img src="{:captcha_src()}" onclick="reloadImg()" class="code" id="img">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" onclick="doLogin()">登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        layui.use(['layer'],function() {
+            $ = layui.jquery;
+            layer = layui.layer;
+
+            // 进入页面使username输入框自动聚焦
+            $('#username').focus();
+            // 回车执行登录
+            $('input').keydown(function(e) {
+                if(e.keyCode == 13){
+                    doLogin()
+                }
+            })
+        })
+
+        // 重新生成验证码
+        function reloadImg() {
+            console.log(123);
+            $('#img').attr('src','{:captcha_src()}?rand=' + Math.random())
+        }
+
+        // 登录执行
+        function doLogin() {
+            var username = $.trim($('#username').val())
+            var pwd = $.trim($('#password').val())
+            var verify = $.trim($('#verify').val())
+            if(username === '') {
+                return layer.alert('请输入用户名',{icon: 2})
+            }
+            if(pwd === '') {
+                return layer.alert('请输入密码',{icon: 2})
+            }
+            if(verify === '') {
+                return layer.alert('请输入验证码',{icon: 2})
+            }
+            $.post('/admins/Account/doLoin',{'username': username, 'pwd': pwd, 'verify': verify}, function(res){
+                console.log(res);
+                if(res.code > 0){
+                    reloadImg(); // 验证失败也要刷新一下二维码
+                    layer.alert(res.msg, {icon: 2});
+                }else {
+                    layer.msg(res.msg);
+                    setTimeout(()=> {
+                        window.location.href = '/admins/Home/index'
+                    },1000)
+                }
+            },'json')
+            
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css">
+  <script src="__STATIC__/plugins/layui/layui.js"></script>
+  <title>Document</title>
+  <style>
+    body {
+      padding: 10px;
+    }
+
+    .header span {
+      padding: 5px;
+      background: #009688;
+      color: #fff;
+    }
+
+    .header>div {
+      border: 1px solid #009688;
+      width: 100%;
+      position: relative;
+      top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <span>管理员列表</span>
+    <div></div>
+  </div>
+
+  <table class="layui-table" style="text-align: center;">
+    <tbody>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>用户名</th>
+          <th>真实姓名</th>
+          <th>角色</th>
+          <th>状态</th>
+          <th>添加时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+
+    <tbody>
+      {volist name="data.lists" id="vo"}
+        <tr>
+          <td>{$vo.id}</td>
+          <td>{$vo.username}</td>
+          <td>{$vo.realname}</td>
+          <td>{$vo.gid}</td>
+          <td>{$vo.status == 0 ? '正常' : '<span style="color: red;">禁用</span>'}</td>
+          <td>{:date('Y-m-d H:i:s',$vo.add_time)}</td>
+          <td>
+            <button class="layui-btn layui-btn-xs">编辑</button>
+            <button class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+          </td>
+        </tr>
+      {/volist}
+    </tbody>
+    </tbody>
+  </table>
+</body>
+
+</html>
