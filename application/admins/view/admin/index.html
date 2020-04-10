@@ -10,12 +10,20 @@
   <style>
     body {
       padding: 10px;
+      overflow: hidden;
     }
 
     .header span {
       padding: 5px;
       background: #009688;
       color: #fff;
+    }
+
+    .header .add-btn {
+      float: right;
+      margin-right: 12px;
+      position: relative;
+      bottom: 8px;
     }
 
     .header>div {
@@ -31,6 +39,7 @@
 
   <div class="header">
     <span>管理员列表</span>
+    <button class="layui-btn layui-btn-sm add-btn" onclick="tapAdd()">添加</button>
     <div></div>
   </div>
 
@@ -50,22 +59,42 @@
 
     <tbody>
       {volist name="data.lists" id="vo"}
-        <tr>
-          <td>{$vo.id}</td>
-          <td>{$vo.username}</td>
-          <td>{$vo.realname}</td>
-          <td>{$vo.gid}</td>
-          <td>{$vo.status == 0 ? '正常' : '<span style="color: red;">禁用</span>'}</td>
-          <td>{:date('Y-m-d H:i:s',$vo.add_time)}</td>
-          <td>
-            <button class="layui-btn layui-btn-xs">编辑</button>
-            <button class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
-          </td>
-        </tr>
+      <tr>
+        <td>{$vo.id}</td>
+        <td>{$vo.username}</td>
+        <td>{$vo.realname}</td>
+        <td>{$vo.gid}</td>
+        <td>{$vo.status == 0 ? '正常' : '<span style="color: red;">禁用</span>'}</td>
+        <td>{:date('Y-m-d H:i:s',$vo.add_time)}</td>
+        <td>
+          <button class="layui-btn layui-btn-xs">编辑</button>
+          <button class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+        </td>
+      </tr>
       {/volist}
     </tbody>
     </tbody>
   </table>
+
+  <script>
+    // 在layui中使用layer layer也可以作为独立的组件使用
+    layui.use('layer', function () {
+      layer = layui.layer
+
+      $ = layui.jquery
+    })
+
+    // 添加
+    function tapAdd() {
+      layer.open({
+        type: 2,
+        title: '添加管理员',
+        shade: .3,
+        area: ['480px','420px'],
+        content: '/admins/Admin/add'
+      });
+    }
+  </script>
 </body>
 
 </html>

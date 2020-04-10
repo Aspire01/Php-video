@@ -12,4 +12,19 @@ class Admin extends BaseAdmin
     $this->assign('data',$data);
     return  $this->fetch();
   }
+
+  /**
+   * 添加管理员
+   */
+  public function add() {
+
+    // 获取角色列表
+    $data['lists'] = $this->db->table('admin_groups')->lists();
+    // var_dump($data);
+    // exit;
+
+    $this->assign('data',$data);
+
+    return $this->fetch();
+  }
 }
