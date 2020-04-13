@@ -67,8 +67,8 @@
         <td>{$vo.status == 0 ? '正常' : '<span style="color: red;">禁用</span>'}</td>
         <td>{:date('Y-m-d H:i:s',$vo.add_time)}</td>
         <td>
-          <button class="layui-btn layui-btn-xs">编辑</button>
-          <button class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+          <button class="layui-btn layui-btn-xs" onclick="tapEdit({$vo.id})">编辑</button>
+          <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="tapDelete({$vo.id})">删除</button>
         </td>
       </tr>
       {/volist}
@@ -93,6 +93,24 @@
         area: ['480px','420px'],
         content: '/admins/Admin/add'
       });
+    }
+
+    // 删除
+    function tapDelete(id) {
+      $.post('/admins/admin/delete',{id: id}, function(res){
+        console.log(res);
+        if(res.code > 0) {
+          layer.msg(res.msg)
+        }else {
+          layer.msg(res.msg)
+          setTimeout(()=> { window.location.reload() },1000)
+        }
+      },'json')
+    }
+
+    // 编辑
+    function tapEdit(id) {
+      layer.msg('这是id:' + id+',但是我不想做了')
     }
   </script>
 </body>

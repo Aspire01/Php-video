@@ -11,21 +11,22 @@
 
 <body style="padding: 10px;">
 
-  <div class="layui-form">
+  <form class="layui-form">
 
     <div class="layui-form-item">
       <label class="layui-form-label" for="username">用户名</label>
       <div class="layui-input-inline">
-        <input id='username' type="text" class="layui-input">
+        <input id='username' type="text" class="layui-input" name="username">
       </div>
     </div>
 
     <div class="layui-form-item">
       <label class="layui-form-label" for="role">角&nbsp;&nbsp;&nbsp;色</label>
       <div class="layui-input-inline">
-        <select name="" id="">
+        <select name="gid">
+          <option value="0">请选择</option>
           {volist name="data.lists" id="vo"}
-            <option>{$vo.title}</option>
+          <option value="{$vo.gid}">{$vo.title}</option>
           {/volist}
         </select>
       </div>
@@ -35,23 +36,30 @@
     <div class="layui-form-item">
       <label class="layui-form-label" for="pwd">密&nbsp;&nbsp;&nbsp;码</label>
       <div class="layui-input-inline">
-        <input id='pwd' type="password" class="layui-input">
+        <input id='pwd' type="password" class="layui-input" name="pwd">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="pwd">姓&nbsp;&nbsp;&nbsp;名</label>
+      <div class="layui-input-inline">
+        <input id='realname' type="text" class="layui-input" name="truename">
       </div>
     </div>
 
     <div class="layui-form-item">
       <label class="layui-form-label">状&nbsp;&nbsp;&nbsp;态</label>
       <div class="layui-input-inline">
-        <input type="checkbox" lay-skin='primary' title="禁用">
+        <input type="checkbox" name="status" lay-skin='primary' title="禁用" value="1">
       </div>
     </div>
 
-    <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn">禁用</button>
-      </div>
-    </div>
+  </form>
 
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" onclick="tapSave()">保存</button>
+    </div>
   </div>
 
   <script>
@@ -60,6 +68,45 @@
       $ = layui.jquery
       form = layui.form
     })
+
+    // 点击保存
+    function tapSave() {
+      let username = $.trim($("input[name='username']").val())
+      let pwd = $.trim($("input[name='pwd']").val())
+      let gid = $("select[name='gid']").val()
+      let truename = $.trim($("input[name='truename']").val())
+
+      // console.log($("input[name='status']").val());
+      // return;
+      
+      if(username == '') {
+        layer.alert('请输入用户名',{ icon: 2});
+        return;
+      }
+      if(gid == '0'){
+        layer.alert('请选择角色')
+        return;
+      }
+      if(pwd == '') {
+        layer.alert('请输入密码')
+        return
+      }
+      if(truename == '') {
+        layer.alert('请输入姓名')
+        return;
+      }
+
+      $.post('/admins/admin/save',$('form').serialize(), function(res) {
+        console.log(res);
+        if(res.code == 0){
+          layer.msg(res.msg)
+          setTimeout(()=> {
+            parent.window.location.reload()
+          },1000)
+        }
+      },'json')
+ 
+    }
   </script>
 
 </body>
